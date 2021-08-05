@@ -204,16 +204,33 @@ public class ByteBlob {
      * @return The resulting blob.
      */
     public static ByteBlob fromRandomBytes(Integer numberOfBytes) {
+        return fromRandomBytes(numberOfBytes, false);
+    }
+
+    /**
+     * @description Returns a ByteBlob filled with random bytes.
+     * @param numberOfBytes The number of random bytes to fill the ByteBlob with.
+     * @param nonZeroBytes 'true' if each of the returned random bytes must be nonzero; otherwise, 'false'.
+     * @return The resulting blob.
+     */
+    public static ByteBlob fromRandomBytes(Integer numberOfBytes, Boolean nonZeroBytes) {
         ByteBlob res = new ByteBlob(numberOfBytes);
 
         Integer rnd;
-        for (Integer i = 0; i < numberOfBytes; i++) {
-            if (Math.mod(i, 4) == 0) {
-                rnd = Crypto.getRandomInteger();
-            }
+        for (Integer i = 0, j = 0; i < numberOfBytes; i++) {
+            Integer b;
+            do {
+                if (j == 0) {
+                    rnd = Crypto.getRandomInteger();
+                    j = 4;
+                }
 
-            res.bytes[i] = rnd & 255;
-            rnd >>>= 8;
+                b = rnd & 255;
+                rnd >>>= 8;
+                j--;
+            } while (b == 0 && nonZeroBytes);
+
+            res.bytes[i] = b;
         }
 
         return res;

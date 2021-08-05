@@ -47,6 +47,15 @@ private class ByteBlob_Test {
     }
 
     @IsTest
+    public static void shouldBeAbleToCreateAByteBlobFromARandomSequenceOfNonZeroBytes() {
+        ByteBlob bb = ByteBlob.fromRandomBytes(2560, true);
+
+        System.assertEquals(2560, bb.size());
+
+        System.assertEquals(-1, bb.indexOf(0, 0));
+    }
+
+    @IsTest
     static void shouldBeAbleToCreateAByteBlobFilledWithZeroedBytes() {
         ByteBlob bb = ByteBlob.fromZeroedBytes(10);
 
